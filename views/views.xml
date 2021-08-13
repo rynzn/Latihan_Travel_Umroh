@@ -1,0 +1,182 @@
+<odoo>
+    <data>
+        <!-- Customer Form View -->
+        <record model="ir.ui.view" id="view_partner_form_travel_umroh">
+            <field name="name">res.partner.form.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+              <xpath expr="//sheet/group" position="after">
+                <group string="Informasi Tambahan">
+                  <group>
+                    <field name="identitas"/>
+                    <field name="jk"/>
+                    <field name="nama_ayah"/>
+                    <field name="nama_ibu"/>
+                  </group>
+                  <group>
+                      <field name="tmp_lahir"/>
+                      <field name="tgl_lahir"/>
+                      <field name="gol_darah"/>
+                      <field name="status_pk"/>
+                  </group>
+                </group>
+              </xpath> 
+            </field>
+        </record>
+
+        <!-- Paket Perjalanan Tree View -->
+        <record model="ir.ui.view" id="paket_perjalanan_tree_view">
+            <field name="name">paket.perjalanan.tree</field>
+            <field name="model">paket.perjalanan</field>
+            <field name="arch" type="xml">
+                <tree string="Paket Perjalanan">
+                    <field name="name"/>
+                    <field name="product_id"/>
+                    <field name="tgl_berangkat"/>
+                    <field name="tgl_pulang"/>
+                    <field name="kuota"/>
+                    <field name="kuota_progress" widget="progressbar"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Paket Perjalanan Form View -->
+        <record model="ir.ui.view" id="paket_perjalanan_form_view">
+            <field name="name">paket.perjalanan.form</field>
+            <field name="model">paket.perjalanan</field>
+            <field name="arch" type="xml">
+                <form string="Form Paket Perjalanan">
+                <header>
+                    <button name="action_confirm" type="object" string="Confirm" states="draft" groups="travel_umroh.group_paket_perjalanan_manager" class="btn-primary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
+                </header>
+                <sheet>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="product_id"/>
+                        <field name="tgl_berangkat"/>
+                        <field name="tgl_pulang"/>
+                        <field name="kuota"/>
+                        <field name="kuota_progress" widget="progressbar"/>
+                    </group>
+                    <notebook>
+                        <page string="List Hotel">
+                            <field name="hotel_list">
+                                <tree editable="bottom">
+                                    <field name="partner_id"/>
+                                    <field name="tgl_awal"/>
+                                    <field name="tgl_akhir"/>
+                                    <field name="kota"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="List Penerbangan">
+                            <field name="pesawat_list">
+                                <tree editable="bottom">
+                                    <field name="partner_id"/>
+                                    <field name="tgl_berangkat"/>
+                                    <field name="kota_asal"/>
+                                    <field name="kota_tujuan"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="List Jadwal">
+                            <field name="acara_list">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="tgl"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="List Jamaah">
+                            <field name="peserta_list">
+                                <tree editable="bottom">
+                                    <field name="partner_id"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                    <group>
+                        <field name="note" placeholder="Notes" nolabel="1"/>
+                    </group>
+                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Paket Perjalanan Sequence -->
+        <record id="paket_perjalanan_sequence" model="ir.sequence">
+            <field name="name">Paket Perjalanan</field>
+            <field name="code">paket.perjalanan</field>
+            <field name="prefix">PP/%(month)s/%(y)s/</field>
+            <field name="padding">4</field>
+        </record>
+
+        <!-- Paket Perjalanan Action -->
+        <record model="ir.actions.act_window" id="paket_perjalanan_action">
+            <field name="name">Paket Perjalanan</field>
+            <field name="res_model">paket.perjalanan</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Paket Perjalanan Menu Item-->
+        <menuitem 
+            id="paket_perjalanan_menu"
+            name="Paket Perjalanan"
+            parent="sale.sale_menu_root"
+            action="paket_perjalanan_action"/>
+
+        <!-- Sales Orders Form View -->
+        <record model="ir.ui.view" id="view_order_form_umroh">
+            <field name="name">sale.order.form.umroh</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <field name="partner_shipping_id" position="after">
+                    <field name="paket_perjalanan_id"/>
+                </field>
+                <notebook>
+                    <page string="List Dokumen">
+                        <field name="dokumen_line">
+                            <tree>
+                                <field name="name"/>
+                                <field name="foto"/>
+                            </tree>
+                            <form>
+                                <group>
+                                    <field name="name"/>
+                                    <field name="foto" widget="image"/>
+                                </group>
+                            </form>
+                        </field>
+                    </page>
+                    <page string="List Passport">
+                        <field name="passport_line">
+                            <tree>
+                                <field name="partner_id"/>
+                                <field name="nomor"/>
+                                <field name="name"/>
+                                <field name="masa_berlaku"/>
+                                <field name="tipe_kamar" />
+                                <field name="foto" widget="image"/>
+                            </tree>
+                            <form>
+                                <group col="4">
+                                    <field name="partner_id"/>
+                                    <field name="nomor"/>
+                                    <field name="name" colspan="4"/>
+                                    <field name="masa_berlaku"/>
+                                    <field name="tipe_kamar" />
+                                    <field name="foto" widget="image"/>
+                                </group>
+                            </form>
+                        </field>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+    </data>
+</odoo>
