@@ -1,0 +1,119 @@
+<odoo>
+    <template id="customer_template_report">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.internal_layout">
+                    <div class='page'>
+                        <center>
+                            <h1 class="pb-5">Customer Report</h1>
+                        </center>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-8">
+                                    <table class="table table-borderless">
+                                        <tbody>
+                                            <tr>
+                                                <td scope="col">Nama Customer</td>
+                                                <td scope="col">: <t t-esc="doc.partner_id.name"></t></td>
+                                            </tr>
+                                            <tr>
+                                                <td scope="col">Alamat</td>
+                                                <td scope="col" class="row">: <t t-esc="doc.partner_id.street"/> <t t-esc="doc.partner_id.city"/> <t t-esc="doc.partner_id.country_id.name"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td scope="col">No HP</td>
+                                                <td scope="col">: <t t-esc="doc.partner_id.phone"></t></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-4">
+                                    <table class="table table-borderless">
+                                        <tbody>
+                                            <tr>
+                                                <td scope="col">No Order</td>
+                                                <td scope="col">: <t t-esc="doc.name"></t></td>
+                                            </tr>
+                                            <tr>
+                                                <td scope="col">Tanggal Order</td>
+                                                <td scope="col">: <t t-esc="doc.date_order"/></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="py-3">
+                            <table class="table table-bordered" style="border: 0.5px solid black">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Product</th>
+                                        <th scope="col">Price Unit</th>
+                                        <th scope="col">Qty (UoM)</th>
+                                        <th scope="col">Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="doc.order_line" t-as="line">
+                                        <td><t t-esc="line.product_id.name"/></td>
+                                        <td><t t-esc="line.price_unit"/></td>
+                                        <td><t t-esc="line.product_uom_qty"/> (<t t-esc="line.product_uom.name"/>)</td>
+                                        <td><t t-esc="line.price_subtotal"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-end" colspan="3">Total :</td>
+                                        <td><t t-esc="doc.amount_total"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="py-3">
+                            <table class="table table-bordered" style="border: 0.5px solid black">
+                                <thead>
+                                    <tr>
+                                        <th colspan="3"><strong>Pembayaran</strong></th>
+                                    </tr>
+                                    <tr>
+                                        <th scope="col">Metode Pemabayaran</th>
+                                        <th scope="col">Tanggal</th>
+                                        <th scope="col">Jumlah</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="doc.invoice_ids" t-as="payment">
+                                        <td><t t-esc="payment.journal_id.type"/></td>
+                                        <td><t t-esc="payment.date"/></td>
+                                        <td><t t-esc="payment.amount_total_signed"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <center>
+                            <table style="border: 1px solid black" class="my-3" width="30%">
+                                <tr>
+                                    <td class="pb-5"><center>Mengetahui</center></td>
+                                </tr>
+                                <tr>
+                                    <td class="pt-5"><center>Administrator</center></td>
+                                </tr>
+                            </table>
+                        </center>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+     <record id="customer_report" model="ir.actions.report">
+        <field name="name">Customer Report</field>
+        <field name="model">sale.order</field> 
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">travel_umroh.customer_template_report</field>
+        <field name="report_file">travel_umroh.customer_template_report</field>
+        <field name="binding_model_id" ref="model_sale_order"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

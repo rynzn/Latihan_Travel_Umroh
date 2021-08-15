@@ -50,6 +50,8 @@
                 <form string="Form Paket Perjalanan">
                 <header>
                     <button name="action_confirm" type="object" string="Confirm" states="draft" groups="travel_umroh.group_paket_perjalanan_manager" class="btn-primary"/>
+                    <button name="update_jamaah" type="object" string="Update Jamaah" states="confirm" class="btn-primary"/>
+                    <button name="cetak_jamaah_xls" type="object" string="Cetak" class="btn-primary" />
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
                 </header>
                 <sheet>
@@ -94,6 +96,10 @@
                             <field name="peserta_list">
                                 <tree editable="bottom">
                                     <field name="partner_id"/>
+                                    <field name="order_id"/>
+                                    <field name="name"/>
+                                    <field name="jenis_kelamin"/>
+                                    <field name="tipe_kamar"/>
                                 </tree>
                             </field>
                         </page>
@@ -178,5 +184,26 @@
             </field>
         </record>
 
+        <!-- Report ke Excel-->
+        <record id="report_excel_wizard" model="ir.ui.view">
+            <field name="name">product.report.wizard</field>
+            <field name="model">paket.perjalanan</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Excel Report">
+                    <separator string="Excel Report" colspan="4" />
+                    <group>
+                        <group>
+                            <field name="name" required="1"/>
+                            <field name="data_file" filename="filename" widget="binary" attrs="{'readonly':True}"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="cetak_jamaah_xls" string="Export"	type="object" default_focus="1" />
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+	    </record>
     </data>
 </odoo>

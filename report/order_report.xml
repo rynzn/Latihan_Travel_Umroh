@@ -1,0 +1,91 @@
+<odoo>
+    <template id="order_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.internal_layout">
+                    <div class='page'>
+                        <center>
+                            <h1 class="pb-5">Delivery Order</h1>
+                        </center>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-8">
+                                    <table class="table table-borderless">
+                                        <tbody>
+                                            <tr>
+                                                <td scope="col">Nama Customer</td>
+                                                <td scope="col">: <t t-esc="doc.partner_id.name"></t></td>
+                                            </tr>
+                                            <tr>
+                                                <td scope="col">Alamat</td>
+                                                <td scope="col" class="row">: <t t-esc="doc.partner_id.street"/> <t t-esc="doc.partner_id.city"/> <t t-esc="doc.partner_id.country_id.name"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td scope="col">No HP</td>
+                                                <td scope="col">: <t t-esc="doc.partner_id.phone"></t></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-4">
+                                    <table class="table table-borderless">
+                                        <tbody>
+                                            <tr>
+                                                <td scope="col">No Order</td>
+                                                <td scope="col">: <t t-esc="doc.name"></t></td>
+                                            </tr>
+                                            <tr>
+                                                <td scope="col">Tanggal Order</td>
+                                                <td scope="col">: <t t-esc="doc.date_order"/></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="py-3">
+                            <table class="table table-bordered" style="border-color:black;">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Product</th>
+                                        <th scope="col">Quantity</th>
+                                        <th scope="col">UoM</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="doc.order_line" t-as="line">
+                                        <td><t t-esc="line.product_id.name"/></td>
+                                        <td><t t-esc="line.product_uom_qty"/></td>
+                                        <td><t t-esc="line.product_uom.name"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <center>
+                            <table style="border: 1px solid black" class="my-3" width="30%">
+                                <tr>
+                                    <td class="pb-5"><center>Mengetahui</center></td>
+                                </tr>
+                                <tr>
+                                    <td class="pt-5"><center>Administrator</center></td>
+                                </tr>
+                            </table>
+                        </center>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="order_report" model="ir.actions.report">
+        <field name="name">Delivery Order Report 2</field>
+        <field name="model">sale.order</field> 
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">travel_umroh.order_template</field>
+        <field name="report_file">travel_umroh.order_template</field>
+        <field name="binding_model_id" ref="model_sale_order"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>
